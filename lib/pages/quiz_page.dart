@@ -14,11 +14,7 @@ class QuizPage extends StatefulWidget {
 class QuizPageState extends State<QuizPage> {
 
   Question currentQuestion;
-  Quiz quiz = new Quiz([
-    new Question("Some quest 1", false),
-    new Question("Some quest 2", false),
-    new Question("Some quest 3", true),
-  ]);
+  Quiz quiz = new Quiz(new Question("Random stuuf 1", false));
 
   String questionText;
   int questionNumber;
@@ -56,8 +52,8 @@ class QuizPageState extends State<QuizPage> {
         overlayShouldBeVisible == true ? new CorrectWrongOverlay(
           isCorrect,
           () {
-            if (quiz.length == questionNumber) {
-              Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score, quiz.length)), (Route route) => route == null);
+            if (quiz.lifes == 0) {
+              Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score)), (Route route) => route == null);
               return;
             }
             currentQuestion = quiz.nextQuestion;
