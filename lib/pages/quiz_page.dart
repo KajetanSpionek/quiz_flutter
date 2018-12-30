@@ -11,6 +11,10 @@ import 'dart:io';
 import 'package:http/http.dart';
 
 class QuizPage extends StatefulWidget {
+  
+  Question firstQuestion;
+  QuizPage(this.firstQuestion);
+
   @override
   State createState() => new QuizPageState();
 }
@@ -18,17 +22,19 @@ class QuizPage extends StatefulWidget {
 class QuizPageState extends State<QuizPage> {
 
   Question currentQuestion;
-  Quiz quiz = new Quiz(new Question("Press True!", true));
+  Quiz quiz;
 
   String questionText;
   int questionNumber;
   bool isCorrect;
   bool overlayShouldBeVisible = false;
   bool waitForServer = false;
+  int lifes;
 
   @override
   void initState() {
     super.initState();
+    quiz = new Quiz(widget.firstQuestion);
     currentQuestion = quiz.nextQuestion;
     questionText = currentQuestion.question;
     questionNumber = quiz.questionNumber;
@@ -36,7 +42,8 @@ class QuizPageState extends State<QuizPage> {
 
   void handleAnswer(bool answer) {
     isCorrect = (currentQuestion.answer == answer);
-    quiz.answer(isCorrect); // Plus one to score
+    quiz.answer(isCorrect); // Plus one to score, lifes minus one
+    lifes = quiz.lifes;
     this.setState(() {
       overlayShouldBeVisible = true;
       waitForServer = true;
@@ -46,7 +53,6 @@ class QuizPageState extends State<QuizPage> {
 
   void handleServerMsg(String json) {
     var data = jsonDecode(json);
-    bool ans = data['answer'].toLowerCase() == 'true';
     quiz.currentQuestion = new Question(data['statement'], data['answer'].toLowerCase() == 'true');
     this.setState((){
       waitForServer = false;
@@ -66,7 +72,7 @@ class QuizPageState extends State<QuizPage> {
           ],
         ),
         overlayShouldBeVisible == true ? new CorrectWrongOverlay(
-          isCorrect, waitForServer,
+          isCorrect, waitForServer, lifes,
           () {
             if (quiz.lifes == 0) {
                 Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score)), (Route route) => route == null);

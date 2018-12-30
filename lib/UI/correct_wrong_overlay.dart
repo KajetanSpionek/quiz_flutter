@@ -6,8 +6,9 @@ class CorrectWrongOverlay extends StatefulWidget {
   bool _isCorrect;
   final VoidCallback _onTap;
   bool waitForSever;
+  int lifes;
 
-  CorrectWrongOverlay(this._isCorrect, this.waitForSever, this._onTap);
+  CorrectWrongOverlay(this._isCorrect, this.waitForSever, this.lifes, this._onTap);
 
   @override
   State createState() => new CorrectWrongOverlayState();
@@ -37,15 +38,30 @@ class CorrectWrongOverlayState extends State<CorrectWrongOverlay> with SingleTic
   @override
   Widget build(BuildContext context) {
     return new Material(
-      color: (widget.waitForSever == true) ? Colors.black87 : Colors.black54, //54
+      color: (widget.waitForSever == true) ? Colors.black87 : Colors.black54,
       child: new InkWell(
         onTap: () => widget._onTap(),
         child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            new Padding(
+              padding: new EdgeInsets.only(top: 60.0),
+            ),
+            new Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Icon(widget.lifes >= 3 ? Icons.favorite : Icons.favorite_border, size: 50.0, color: Colors.redAccent),
+                new Padding(padding: new EdgeInsets.only(right: 10.0)),
+                new Icon(widget.lifes >= 2 ? Icons.favorite : Icons.favorite_border, size: 50.0, color: Colors.redAccent),
+                new Padding(padding: new EdgeInsets.only(right: 10.0)),
+                new Icon(widget.lifes >= 1 ? Icons.favorite : Icons.favorite_border, size: 50.0, color: Colors.redAccent),
+              ],
+            ),
+            new Padding(
+              padding: new EdgeInsets.only(bottom: 160.0),
+            ),
             new Container(
               decoration: new BoxDecoration(
-                //color: Colors.greenAccent,
                 color: (widget._isCorrect == true) ? Colors.greenAccent : Colors.redAccent,
                 shape: BoxShape.circle
               ),
