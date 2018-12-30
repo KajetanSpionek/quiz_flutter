@@ -5,8 +5,9 @@ class CorrectWrongOverlay extends StatefulWidget {
 
   bool _isCorrect;
   final VoidCallback _onTap;
+  bool waitForSever;
 
-  CorrectWrongOverlay(this._isCorrect, this._onTap);
+  CorrectWrongOverlay(this._isCorrect, this.waitForSever, this._onTap);
 
   @override
   State createState() => new CorrectWrongOverlayState();
@@ -36,7 +37,7 @@ class CorrectWrongOverlayState extends State<CorrectWrongOverlay> with SingleTic
   @override
   Widget build(BuildContext context) {
     return new Material(
-      color: Colors.black87, //54
+      color: (widget.waitForSever == true) ? Colors.black87 : Colors.black54, //54
       child: new InkWell(
         onTap: () => widget._onTap(),
         child: new Column(
@@ -56,7 +57,11 @@ class CorrectWrongOverlayState extends State<CorrectWrongOverlay> with SingleTic
             new Padding(
               padding: new EdgeInsets.only(bottom: 20.0),
             ),
-            new Text(widget._isCorrect == true ? "Correct!" : "Wrong!", style: new TextStyle(color: Colors.white, fontSize: 30.0))
+            new Text(widget._isCorrect == true ? "Correct!" : "Wrong!", style: new TextStyle(color: Colors.white, fontSize: 30.0)),
+            //new Padding(
+              //padding: new EdgeInsets.only(bottom:150.0)
+             // ),
+            new Text(widget.waitForSever == true ? "Wait for server..." : "Tap to continue", style: new TextStyle(color: Colors.white, fontSize: 10.0))
           ],
         )
       )
